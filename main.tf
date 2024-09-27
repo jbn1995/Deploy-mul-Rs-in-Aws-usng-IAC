@@ -35,11 +35,14 @@ resource "aws_instance" "main" {
   #we will get each.key and each.value
   ami = each.value.ami
   instance_type = each.value.instance_type
-  
+
   subnet_id = element(aws_subnet.main[*].id, index(keys(var.ec2-map), each.key) % length(aws_subnet.main))
 
   tags = {
     #Name = "${local.project}-instance-${count.index}"
     Name = "${local.project}-instance-${each.key}"
   }
+}
+output "subnet_ids" {
+  value = aws_subnet.main.id
 }
